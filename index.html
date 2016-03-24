@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>p5-eyeTracking</title>
+    <script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>
+
+  <script>
+  var eyeX;
+  var eyeY;
+  var leftOpen;
+  var rightOpen;
+  var bothOpen;
+  var ws;
+
+  function WebSocketTest() {
+    if ("WebSocket" in window) {
+       console.log("WebSocket is supported by your Browser!");
+
+       // Let us open a web socket
+       ws = new WebSocket("wss://localhost:5619");
+
+       ws.onopen = function() {
+          // Web Socket is connected, send data using send()
+          ws.send("Message to send");
+       };
+
+       ws.onmessage = function (evt) {
+         //console.log('received data: ', evt.data);
+         var data = JSON.parse(evt.data);
+
+         var tempData = {}
+         
+
+
+         eyeX = data["avg"]["x"]; 
+         eyeY = data["avg"]["y"];
+         leftOpen = data["available"]["left"];
+         rightOpen = data["available"]["right"];
+         bothOpen = data["available"]["both"];
+        //console.log (eyeX, eyeY, leftOpen, rightOpen, bothOpen)
+
+       };
+
+       ws.onclose = function() {
+          // websocket is closed.
+          alert("Connection is closed...");
+       };
+    } else {
+       // The browser doesn't support WebSocket
+       alert("WebSocket NOT supported by your Browser!");
+    }
+  }
+
+  window.onload = WebSocketTest;
+  </script>
+    <script src="libraries/p5.js" type="text/javascript"></script>
+
+    <script src="libraries/p5.dom.js" type="text/javascript"></script>
+    <script src="libraries/p5.sound.js" type="text/javascript"></script>
+
+    <script src="sketch.js" type="text/javascript"></script>
+
+    <style> body {padding: 0; margin: 0;} canvas {vertical-align: top;} </style>
+  </head>
+  <body>
+  </body>
+</html>
